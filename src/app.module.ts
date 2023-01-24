@@ -1,25 +1,36 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { ConfigModule } from '@nestjs/config';
+import emailConfig from './config/emailConfig';
+import { validationSchema } from './config/validationSchema'
+
 import { UserModule } from './components/users/user.module';
 import { TextModule } from './components/text/text.module';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+
 import { UserEntity } from './components/users/entities/user.entity';
 
 @Module({
-  imports: [UserModule, TextModule,
+  imports: [UserModule, 
+    TextModule,
+    ConfigModule.forRoot({
+      envFilePath: [`${__dirname}/config/env/.development.env`],
+      load: [emailConfig],
+      isGlobal: true,
+      //validationSchema,
+    }),
     TypeOrmModule.forRoot({
       type: 'mariadb',
-      host: process.env.DATABASE_HOST,
+      host: 'localhost',
       port: 3306,
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
+      username: 'root',
+      password: '1234',
       database: 'test',
       entities: [UserEntity],
-      synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
+      synchronize: true,
     })
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
