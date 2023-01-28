@@ -1,34 +1,36 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { ConfigModule } from '@nestjs/config';
-import emailConfig from './config/emailConfig';
-import { validationSchema } from './config/validationSchema'
+import { ConfigModule } from "@nestjs/config";
+import emailConfig from "./config/emailConfig";
+import { validationSchema } from "./config/validationSchema";
 
-import { UserModule } from './components/users/user.module';
-import { TextModule } from './components/text/text.module';
+import { UserModule } from "./components/users/user.module";
+import { TextModule } from "./components/text/text.module";
 
-import { UserEntity } from './components/users/entities/user.entity';
+import { UserEntity } from "./components/users/entities/user.entity";
+import authConfig from "./config/authConfig";
 
 @Module({
-  imports: [UserModule, 
+  imports: [
+    UserModule,
     TextModule,
     ConfigModule.forRoot({
       envFilePath: [`${__dirname}/config/env/.development.env`],
-      load: [emailConfig],
+      load: [emailConfig, authConfig],
       isGlobal: true,
-      //validationSchema,
+      validationSchema,
     }),
     TypeOrmModule.forRoot({
-      type: 'mariadb',
-      host: 'localhost',
+      type: "mariadb",
+      host: process.env.DATABASE_HOST,
       port: 3306,
-      username: 'root',
-      password: '1234',
-      database: 'test',
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: "test",
       entities: [UserEntity],
-      synchronize: true,
-    })
+      synchronize: process.env.DATABASE_SYNCHRONIZE === "true",
+    }),
   ],
   controllers: [],
   providers: [],
