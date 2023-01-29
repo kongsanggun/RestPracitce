@@ -2,6 +2,7 @@ import * as uuid from "uuid";
 import { ulid } from "ulid";
 import {
   Injectable,
+  NotAcceptableException,
   NotFoundException,
   UnprocessableEntityException,
 } from "@nestjs/common";
@@ -95,6 +96,10 @@ export class UserService {
 
     if (!user) {
       throw new NotFoundException("유저가 존재하지 않습니다.");
+    }
+
+    if (!(user.password === password)) {
+      throw new NotAcceptableException("잘못된 비밀번호입니다.");
     }
 
     return this.authService.login({

@@ -10,6 +10,7 @@ import { TextModule } from "./components/text/text.module";
 
 import { UserEntity } from "./components/users/entities/user.entity";
 import authConfig from "./config/authConfig";
+import { TextEntity } from "./components/text/entities/text.entity";
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import authConfig from "./config/authConfig";
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: "test",
-      entities: [UserEntity],
+      entities: [UserEntity, TextEntity],
       synchronize: process.env.DATABASE_SYNCHRONIZE === "true",
     }),
   ],

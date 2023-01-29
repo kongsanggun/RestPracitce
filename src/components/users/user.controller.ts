@@ -16,15 +16,12 @@ import { VerifyEmailDto } from "./dto/verify-email.dto";
 import { UserLoginDto } from "./dto/user-login.dto";
 
 import { UserInfo } from "./UserInfo";
-import { AuthService } from "../auth/auth.service";
-
 import { AuthGuard } from "../../authGuard.controller";
 
 @Controller("users")
 export class UserController {
   constructor(
-    private readonly userService: UserService,
-    private readonly authService: AuthService,
+    private readonly userService: UserService
   ) {}
 
   @Post()
@@ -47,10 +44,7 @@ export class UserController {
 
   @UseGuards(AuthGuard) // 가드를 이용한 인가처리
   @Get("/:id")
-  async getUserInfo(
-    @Headers() headers: any,
-    @Param("id") userId: string
-  ): Promise<UserInfo> {
+  async getUserInfo(@Param("id") userId: string): Promise<UserInfo> {
     return await this.userService.getUserInfo(userId);
   } // 유저 확인
 }
